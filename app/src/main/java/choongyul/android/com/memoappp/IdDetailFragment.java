@@ -17,36 +17,41 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import choongyul.android.com.memoappp.domain.Memo;
+import choongyul.android.com.memoappp.domain.Id;
 import choongyul.android.com.memoappp.interfaces.GoTextInterface;
 import choongyul.android.com.memoappp.interfaces.IDInterface;
+import choongyul.android.com.memoappp.interfaces.IdDetailInterface;
 import choongyul.android.com.memoappp.interfaces.TextDetailInterface;
 
 
-public class TextDetailFragment extends Fragment implements View.OnClickListener{
+public class IdDetailFragment extends Fragment implements View.OnClickListener{
 
     GoTextInterface goTextInterface;
     TextDetailInterface textDetailInterface;
     IDInterface idInterface;
+    IdDetailInterface idDetailInterface;
+    IdFragment idFragment;
     Context context = null;
     View view = null;
     Button btnSave, btnId, btnText, btnAccount;
+    EditText editAdress;
+    EditText editId;
     EditText editMemo;
     int position = -1;
-    List<Memo> datas = new ArrayList();
+    List<Id> idDatas = new ArrayList();
     boolean modifyFlag = false;
-    Memo memo;
-    Memo memo2;
+    Id id;
 
     public void setPosition(int position) {
         this.position = position;
     }
-    public void setData(List<Memo> datas) {
-        this.datas = datas;
+
+    public void setData(List<Id> datas) {
+        this.idDatas = datas;
     }
 
 
-    public TextDetailFragment() {
+    public IdDetailFragment() {
         // Required empty public constructor
     }
 
@@ -59,13 +64,15 @@ public class TextDetailFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void setEditMemo() {
-        memo2 = null;
-        memo2 = datas.get(position);
-        Log.e("setmemo", "세팅할 position은 ::::::::::: " + position + " :::::::::::: 입니다.");
-        Log.e("setmemo", "세팅할 메모는 " + memo2.getMemo() + " :::::::::::: 입니다.");
+    private void setEditId() {
+        id = null;
+        id = idDatas.get(position);
+        Log.e("setEditId", "세팅할 position은 ::::::::::: " + position + " :::::::::::: 입니다.");
+        Log.e("setEditId", "세팅할 메모는 " + id.getMemo() + " :::::::::::: 입니다.");
 
-        editMemo.setText(memo2.getMemo());
+        editAdress.setText(id.getSiteAdress());
+        editId.setText(id.getSiteId());
+        editMemo.setText(id.getMemo());
     }
 
     @Override
@@ -75,18 +82,28 @@ public class TextDetailFragment extends Fragment implements View.OnClickListener
             return view;
         }
         modifyFlag = false;
-        view = inflater.inflate(R.layout.fragment_text_detail, container, false);
+
+        view = inflater.inflate(R.layout.fragment_id_detail, container, false);
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnId = (Button) view.findViewById(R.id.btnId);
         btnText = (Button) view.findViewById(R.id.btnText);
         btnAccount = (Button) view.findViewById(R.id.btnAccount);
 
-        editMemo = (EditText) view.findViewById(R.id.editText);
+
+
+        editMemo = (EditText) view.findViewById(R.id.etMemo);
+        editAdress = (EditText) view.findViewById(R.id.etAdress);
+        editId = (EditText) view.findViewById(R.id.etID);
+
         editMemo.setText("");
+        editAdress.setText("");
+        editId.setText("");
+
+
 
         if( position >= 0) {
             Log.e("ifposition", "세팅");
-            setEditMemo();
+            setEditId();
             modifyFlag = true;
         }
 
@@ -96,15 +113,6 @@ public class TextDetailFragment extends Fragment implements View.OnClickListener
         btnAccount.setOnClickListener(this);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-        textDetailInterface = (TextDetailInterface) context;
-        goTextInterface = (GoTextInterface) context;
-        idInterface = (IDInterface) context;
     }
 
     @Override
@@ -121,33 +129,58 @@ public class TextDetailFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.btnSave:
                 if (modifyFlag) {
-                    Log.e("textdetailF", " 수정되었습니다.");
+
+//                    Log.e("textdetailF", " 수정되었습니다.");
+
                     Toast.makeText(context, "수정되었습니다", Toast.LENGTH_SHORT).show();
-                    memo2.setMemo(editMemo.getText().toString());
-                    memo2.setDate(new Date(System.currentTimeMillis()));
+                    id.setSiteAdress(editAdress.getText().toString());
+                    id.setSiteId(editId.getText().toString());
+                    id.setMemo(editMemo.getText().toString());
+                    id.setDate(new Date(System.currentTimeMillis()));
+
                     try {
-                        textDetailInterface.saveToTextModify(memo2);
+                        idDetailInterface.saveToIdModify(id);
+
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
 
-                } else if( !editMemo.getText().toString().equals("")) {
+                } else if( !editAdress.getText().toString().equals("") && !editId.getText().toString().equals("")) {
                     Toast.makeText(context, "저장되었습니다", Toast.LENGTH_SHORT).show();
-                    Log.e("textdetailF", " editMemo.getText 1" + editMemo.getText().toString() +"1 :::::::: 입니다.");
-                    memo = new Memo();
-                    String str = editMemo.getText().toString();
-                    memo.setMemo(str);
-                    memo.setDate(new Date(System.currentTimeMillis()));
+//                    Log.e("textdetailF", " editMemo.getText 1" + editMemo.getText().toString() +"1 :::::::: 입니다.");
+
+                    Id id = new Id();
+
+                    String adress = editAdress.getText().toString();
+                    String siteId = editId.getText().toString();
+                    String siteMemo = editMemo.getText().toString();
+
+                    id.setSiteAdress(adress);
+                    id.setSiteId(siteId);
+                    id.setMemo(siteMemo);
+                    id.setDate(new Date(System.currentTimeMillis()));
+
                     try {
-                        textDetailInterface.saveToList(memo);
+                        idDetailInterface.saveToId(id);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(context, "저장할 메모가 없습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "주소와 아이디는 입력해야합니다", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+        textDetailInterface = (TextDetailInterface) context;
+        goTextInterface = (GoTextInterface) context;
+        idInterface = (IDInterface) context;
+        idDetailInterface = (IdDetailInterface) context;
+
     }
 
     @Override

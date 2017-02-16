@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
+import choongyul.android.com.memoappp.domain.Id;
 import choongyul.android.com.memoappp.domain.Memo;
 
 /**
@@ -19,7 +20,7 @@ import choongyul.android.com.memoappp.domain.Memo;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "database.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
 
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -33,8 +34,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try{
-            // Bbs.class 파일에 정의된 테이블을 생성한다.
+            // memo.class 파일에 정의된 테이블을 생성한다.
             TableUtils.createTable(connectionSource, Memo.class);
+            TableUtils.createTable(connectionSource, Id.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -50,12 +52,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try{
-            // Bbs.class 에서 정의된 테이블을 삭제
-            TableUtils.dropTable(connectionSource, Memo.class, false);
-            // 데이터를 보존해야 될 필요성이 있으면 중간처리를 해줘야만 한다.
-            // TODO : 임시테이블을 생성한 후 데이터를 먼저 저장하고 onCreate 이후에 데이터를 입력해준다.
-            // onCreate를 호출해서 테이블을 다시 생성한다.
-            onCreate(database, connectionSource);
+            TableUtils.createTable(connectionSource, Id.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -77,5 +74,16 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         if (memoDao != null) {
             memoDao = null;
         }
+    }
+
+    private Dao<Id, Integer> idDao = null;
+    // Dao 객체를 통해서
+    // Long은 키값이고 Bbs는 자료이다.
+    public Dao<Id, Integer> getIdDao() throws SQLException {
+        if(idDao != null) {
+            return idDao;
+        }
+        idDao = getDao(Id.class);
+        return idDao;
     }
 }

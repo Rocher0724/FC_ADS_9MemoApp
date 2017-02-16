@@ -1,0 +1,153 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relativeLO"
+    tools:context="choongyul.android.com.memoappp.MainFragment"
+    android:background="#6c6b75"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relati"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="60dp"
+        android:background="#aba8bc">
+
+
+        <EditText
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etID"
+            android:gravity="top"
+            android:layout_below="@+id/textID"
+            android:layout_alignLeft="@+id/textID"
+            android:layout_alignStart="@+id/textID"
+            android:hint="   insert ID"
+            android:background="@drawable/rounded_edittext"
+            android:paddingTop="10dp" />
+
+
+        <TextView
+            android:text="Your ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="57dp"
+            android:id="@+id/textID"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_below="@+id/etAdress"
+            android:layout_alignLeft="@+id/etAdress"
+            android:layout_alignStart="@+id/etAdress"/>
+
+        <TextView
+            android:text="Memo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textID"
+            android:layout_alignLeft="@+id/etAdress"
+            android:layout_alignStart="@+id/etAdress"
+            android:layout_marginTop="83dp"
+            android:id="@+id/textMemo"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etAdress"
+            android:gravity="top"
+            android:hint="   insert adress"
+            android:layout_below="@+id/textView"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:background="@drawable/rounded_edittext"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:text="Site Adress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="41dp"
+            android:layout_marginStart="41dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/textView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:text="ID Manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp" />
+
+        <EditText
+            android:layout_width="240dp"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etMemo"
+            android:gravity="top"
+            android:hint=" Don't insert your password"
+            android:background="@drawable/rounded_edittext"
+            android:layout_height="100dp"
+            android:layout_below="@+id/textMemo"
+            android:layout_alignLeft="@+id/textMemo"
+            android:layout_alignStart="@+id/textMemo"
+            android:paddingTop="10dp" />
+    </RelativeLayout>
+
+    <Button
+        android:text="text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnText"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btnAccount" />
+
+    <Button
+        android:text="save"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSave"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="88dp" />
+
+    <Button
+        android:text="account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAccount"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btnSave"
+        android:layout_toStartOf="@+id/btnSave"
+        android:layout_marginRight="3dp" />
+
+    <Button
+        android:text="ID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnId"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btnText"
+        android:layout_toEndOf="@+id/btnText"
+        android:layout_marginLeft="3dp" />
+
+
+</RelativeLayout>

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/relativeLO"
     tools:context="choongyul.android.com.memoappp.MainFragment"
+    android:background="#aba8bc"
     >
 
     <Button
@@ -14,20 +15,45 @@
         android:id="@+id/btnText"
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnAccount"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp" />
+        app:layout_constraintRight_toLeftOf="@+id/btnAccount" />
 
     <Button
         android:text="save"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSave"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="88dp" />
+
+    <Button
+        android:text="account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAccount"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btnSave"
+        android:layout_toStartOf="@+id/btnSave"
+        android:layout_marginRight="3dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/editText"
+        android:layout_above="@+id/btnText"
+        android:gravity="top"
+        android:background="@drawable/rounded_edittext"
+        android:hint="   insert plz"
+        android:layout_margin="15dp"
+        android:padding="15dp"
+        />
 
     <Button
         android:text="ID"
@@ -37,39 +63,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/btnText"
         android:layout_toEndOf="@+id/btnText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnText"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.0" />
-
-    <Button
-        android:text="account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnAccount"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnId"
-        android:layout_toEndOf="@+id/btnId"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnSave"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/editText"
-        android:layout_above="@+id/btnText"
-        android:gravity="top"
-        android:background="#FFFFFF"
-        android:hint="   insert plz" />
+        android:layout_marginLeft="3dp" />
 
 
 </RelativeLayout>

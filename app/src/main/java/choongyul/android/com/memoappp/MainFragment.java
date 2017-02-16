@@ -6,30 +6,37 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import choongyul.android.com.memoappp.domain.Memo;
-import choongyul.android.com.memoappp.interfaces.MainInterface;
+import choongyul.android.com.memoappp.interfaces.IDInterface;
 import choongyul.android.com.memoappp.interfaces.TextInterface;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment implements View.OnClickListener, TextWatcher {
     View view;
     RecyclerView recyclerView;
     Button btnText, btnId, btnAccount, btnAddMemo;
     Context context;
+    EditText searchBar;
     private List<Memo> datas = new ArrayList<>();
+    private List<Memo> searchedData = new ArrayList<>();
     TextInterface textInterface;
     AdapterT adapter;
+    IDInterface idInterface;
 
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -58,11 +65,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         btnId = (Button) view.findViewById(R.id.btnId);
         btnAccount = (Button) view.findViewById(R.id.btnAccount);
         btnAddMemo = (Button) view.findViewById(R.id.btnAddMemo);
+        searchBar = (EditText) view.findViewById(R.id.searchBar);
+
 
         btnText.setOnClickListener(this);
         btnId.setOnClickListener(this);
         btnAccount.setOnClickListener(this);
         btnAddMemo.setOnClickListener(this);
+        searchBar.addTextChangedListener(this);
+
+        searchBar.setText("");
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new AdapterT(context, datas);
@@ -84,7 +96,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-        this.textInterface = (TextInterface) context;
+        textInterface = (TextInterface) context;
+        idInterface = (IDInterface) context;
     }
 
     @Override
@@ -93,6 +106,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             case R.id.btnText:
                 break;
             case R.id.btnId:
+                try {
+                    idInterface.goID();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btnAccount:
                 break;
@@ -100,5 +118,36 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 textInterface.goDetail();
                 break;
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String textSearch = searchBar.getText().toString();
+        filter(textSearch);
+    }
+
+    private void filter(String textSearch) {
+        searchedData.clear();
+        if (textSearch.equals("")){
+            searchedData.addAll(datas);
+        } else {
+            for(Memo item : datas) {
+                if( item.getMemo().contains(textSearch)) {
+                    searchedData.add(item);
+                }
+            }
+        }
+        adapter = new AdapterT(context, searchedData);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

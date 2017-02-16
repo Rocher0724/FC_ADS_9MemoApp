@@ -7,22 +7,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.FrameLayout;
-
+import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import choongyul.android.com.memoappp.data.DBHelper;
+import choongyul.android.com.memoappp.domain.Id;
 import choongyul.android.com.memoappp.domain.Memo;
 import choongyul.android.com.memoappp.interfaces.GoTextInterface;
-import choongyul.android.com.memoappp.interfaces.MainInterface;
+import choongyul.android.com.memoappp.interfaces.IDInterface;
+import choongyul.android.com.memoappp.interfaces.DeleteInterface;
+import choongyul.android.com.memoappp.interfaces.IdDetailInterface;
 import choongyul.android.com.memoappp.interfaces.TextDetailInterface;
 import choongyul.android.com.memoappp.interfaces.TextInterface;
 
-public class MainActivity extends AppCompatActivity implements MainInterface, TextInterface, TextDetailInterface, GoTextInterface {
+public class MainActivity
+        extends AppCompatActivity
+        implements DeleteInterface, TextInterface, TextDetailInterface, GoTextInterface, IDInterface, IdDetailInterface {
 
     Button mBtnMemo, mBtnId, mBtnAccount, mBtnNew;
 
@@ -31,11 +34,13 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
     List<Memo> datas = new ArrayList();
     FrameLayout layoutMain;
     MainFragment main;
-    IdFragment id;
+    IdFragment idF;
     AccountFragment account;
     FragmentManager manager;
     TextDetailFragment textDetail;
-
+    Dao<Id, Integer> idDao;
+    List<Id> idDatas = new ArrayList();
+    IdDetailFragment idDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +54,14 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
 
         layoutMain = (FrameLayout) findViewById(R.id.frameLayout);
         main = MainFragment.newInstance(1);
-        id = IdFragment.newInstance(1);
+        idF = new IdFragment();
         account = AccountFragment.newInstance(1);
         textDetail = new TextDetailFragment();
+        idDetailFragment = new IdDetailFragment();
 
 
         try {
-            loadData();
+            loadTextData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,13 +69,10 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
 
         manager = getSupportFragmentManager();
         setMainFragment();
-
-
-
-
-
     }
-    public void loadData () throws SQLException {
+
+
+    public void loadTextData () throws SQLException {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
 
         memoDao = dbHelper.getMemoDao();
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
         FragmentTransaction transaction = manager.beginTransaction();
 
         textDetailRefresh();
-
+        transaction.remove(main);
         transaction.add(R.id.activity_main, textDetail);
         transaction.addToBackStack(null);
         textDetail.setPosition(-1);
@@ -113,8 +116,9 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
     @Override
     public void goDetail(int position) {
         textDetailRefresh();
-        Log.e("Mainactivity", " position은 ::::::::::: " + position + " :::::::::::: 입니다.");
+
         FragmentTransaction transaction = manager.beginTransaction();
+        transaction.remove(main);
         transaction.add(R.id.activity_main, textDetail);
         transaction.addToBackStack(null);
         textDetail.setPosition(position);
@@ -132,6 +136,28 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
     }
 
     @Override
+    public void fromIdToText() {
+        // super.onBackPressed();
+        Log.e("Mainactivity", " text로가자 :::::::::::::::::::::::");
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.remove(idF);
+        transaction.add(R.id.activity_main, main);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    @Override
+    public void fromAddTextToId() {
+        Log.e("Mainactivity", " text로가자 :::::::::::::::::::::::");
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.remove(textDetail);
+        transaction.add(R.id.activity_main, idF);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
     public void saveToList(Memo memo) throws SQLException {
         dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
 
@@ -139,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
 
         memoDao.create(memo);
 
-        loadData();
+        loadTextData();
         main.setData(datas);
         super.onBackPressed();
         main.refreshAdapter();
@@ -153,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
 
         memoDao.update(memo);
 
-        loadData();
+        loadTextData();
         main.setData(datas);
         super.onBackPressed();
         main.refreshAdapter();
@@ -168,8 +194,107 @@ public class MainActivity extends AppCompatActivity implements MainInterface, Te
         Memo memo = datas.get(position);
         memoDao.delete(memo);
 
-        loadData();
+        loadTextData();
         main.setData(datas);
         main.refreshAdapter();
+    }
+
+    @Override
+    public void idDelete(int position) throws SQLException {
+        Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+
+        idDao = dbHelper.getIdDao();
+        Id id = idDatas.get(position);
+        idDao.delete(id);
+
+        loadIDData();
+        idF.setData(idDatas);
+        idF.refreshIdAdapter();
+    }
+
+    @Override
+    public void goID() throws SQLException {
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        loadIDData();
+        idF.setData(idDatas);
+
+        textDetailRefresh();
+        transaction.replace(R.id.activity_main, idF);
+        transaction.addToBackStack(null);
+        idF.setPosition(-1);
+        transaction.commit();
+    }
+
+    public void loadIDData () throws SQLException {
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+
+        idDao = dbHelper.getIdDao();
+
+        idDatas = idDao.queryForAll();
+    }
+
+
+    @Override
+    public void goIdDetail() {
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        idDetailRefresh();
+
+        transaction.replace(R.id.activity_main, idDetailFragment);
+        transaction.addToBackStack(null);
+        idDetailFragment.setPosition(-1);
+        transaction.commit();
+
+    }
+
+    private void idDetailRefresh (){
+        idDetailFragment = null;
+        idDetailFragment = new IdDetailFragment();
+    }
+
+    @Override
+    public void goIdDetail(int position) {
+        idF.refreshIdAdapter();
+        Log.e("IdFragment", " 저장을하자 :::::::::::::::::::::::");
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.activity_main, idDetailFragment);
+        transaction.addToBackStack(null);
+        idDetailFragment.setPosition(position);
+        idDetailFragment.setData(idDatas);
+        transaction.commit();
+    }
+
+    @Override
+    public void saveToId(Id id) throws SQLException {
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+
+        idDao = dbHelper.getIdDao();
+
+        idDao.create(id);
+
+
+        super.onBackPressed();
+        loadIDData();
+        idF.setData(idDatas);
+        idF.refreshIdAdapter();
+    }
+
+
+    @Override
+    public void saveToIdModify(Id id) throws SQLException {
+        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+
+        idDao = dbHelper.getIdDao();
+
+        idDao.update(id);
+
+        super.onBackPressed();
+
+        // 셋데이터를 하고 refresh를 해야 세팅이 된다.
+        loadIDData();
+        idF.setData(idDatas);
+        idF.refreshIdAdapter();
     }
 }

@@ -5,24 +5,10 @@
     android:layout_height="match_parent"
     android:id="@+id/relativeLO"
     tools:context="choongyul.android.com.memoappp.MainFragment"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     >
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        android:id="@+id/searchBar"
-        android:hint="검색" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -50,11 +36,7 @@
         android:text="ID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnText"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/btnId"
-        app:layout_constraintHorizontal_bias="0.0"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/btnText"
         android:layout_toEndOf="@+id/btnText"
@@ -64,23 +46,22 @@
         android:text="text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnAccount"
         android:id="@+id/btnText"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
-        android:text="ADD MemO"
-        android:layout_width="wrap_content"
+        android:text="add Memo"
+        android:layout_width="88dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/btnAddMemo"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <Button
         android:text="account"
@@ -93,6 +74,22 @@
         android:layout_toLeftOf="@+id/btnAddMemo"
         android:layout_toStartOf="@+id/btnAddMemo"
         android:layout_marginRight="3dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:id="@+id/searchBar"
+        android:hint="검색" />
 
 
 </RelativeLayout>
