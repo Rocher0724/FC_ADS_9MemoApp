@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_account_detail"
+    tools:context="choongyul.android.com.memoappp.AccountDetailActivity"
+    android:background="#6c6b75">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/relatiACC"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#aba8bc">
+
+        <TextView
+            android:text="계좌정보"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etBank"
+            android:gravity="top"
+            android:layout_below="@+id/textBANK"
+            android:layout_alignLeft="@+id/textBANK"
+            android:layout_alignStart="@+id/textBANK"
+            android:hint="   은행명"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:layout_height="50dp" />
+
+
+        <TextView
+            android:text="은행명"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/textBANK"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_below="@+id/etNick"
+            android:layout_alignLeft="@+id/etNick"
+            android:layout_alignStart="@+id/etNick"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etNick"
+            android:gravity="top"
+            android:hint="   구분"
+            android:layout_below="@+id/textView"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:background="@drawable/rounded_edittext"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:layout_height="50dp" />
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etAccount"
+            android:gravity="top"
+            android:hint="   계좌번호"
+            android:background="@drawable/rounded_edittext"
+            android:layout_below="@+id/textAccount"
+            android:layout_alignLeft="@+id/textAccount"
+            android:layout_alignStart="@+id/textAccount"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:padding="10dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:text="계좌 별명"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginStart="21dp"
+            android:id="@+id/textView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="50dp" />
+
+        <TextView
+            android:text="계좌번호"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/textAccount"
+            android:layout_below="@+id/etBank"
+            android:layout_alignLeft="@+id/etBank"
+            android:layout_alignStart="@+id/etBank" />
+
+        <TextView
+            android:text="소유자"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textOwner"
+            android:layout_below="@+id/etAccount"
+            android:layout_alignLeft="@+id/etAccount"
+            android:layout_alignStart="@+id/etAccount" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/etOwner"
+            android:gravity="top"
+            android:hint="   소유자 이름"
+            android:background="@drawable/rounded_edittext"
+            android:padding="10dp"
+            android:layout_below="@+id/textOwner"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignStart="@+id/textOwner"
+            android:layout_alignLeft="@+id/textOwner"
+            android:layout_marginRight="20dp"
+            android:layout_height="50dp" />
+
+    </RelativeLayout>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabAddAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic50"
+        style="@style/MenuButtonsSmall.Blue"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="36dp" />
+
+
+</RelativeLayout>

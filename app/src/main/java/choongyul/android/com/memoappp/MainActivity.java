@@ -1,300 +1,255 @@
 package choongyul.android.com.memoappp;
 
+import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-import java.sql.SQLException;
+import android.view.View;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import java.util.ArrayList;
 import java.util.List;
-import choongyul.android.com.memoappp.data.DBHelper;
+import choongyul.android.com.memoappp.domain.Account;
 import choongyul.android.com.memoappp.domain.Id;
 import choongyul.android.com.memoappp.domain.Memo;
-import choongyul.android.com.memoappp.interfaces.GoTextInterface;
-import choongyul.android.com.memoappp.interfaces.IDInterface;
-import choongyul.android.com.memoappp.interfaces.DeleteInterface;
+import choongyul.android.com.memoappp.interfaces.AccountDetailInterface;
 import choongyul.android.com.memoappp.interfaces.IdDetailInterface;
-import choongyul.android.com.memoappp.interfaces.TextDetailInterface;
 import choongyul.android.com.memoappp.interfaces.TextInterface;
 
 public class MainActivity
         extends AppCompatActivity
-        implements DeleteInterface, TextInterface, TextDetailInterface, GoTextInterface, IDInterface, IdDetailInterface {
+        implements TextInterface, IdDetailInterface, AccountDetailInterface {
 
-    Button mBtnMemo, mBtnId, mBtnAccount, mBtnNew;
+    private static final int REQ_ADD_MEMO = 100;
+    private static final int REQ_MEDIFY_MEMO = 101;
+    private static final int REQ_ADD_ID = 102;
+    private static final int REQ_MEDIFY_ID = 103;
+    private static final int REQ_ADD_ACCOUNT = 104;
+    private static final int REQ_MEDIFY_ACCOUNT = 105;
 
-    DBHelper dbHelper;
-    Dao<Memo, Integer> memoDao;
-    List<Memo> datas = new ArrayList();
-    FrameLayout layoutMain;
-    MainFragment main;
-    IdFragment idF;
-    AccountFragment account;
-    FragmentManager manager;
-    TextDetailFragment textDetail;
-    Dao<Id, Integer> idDao;
+    TextFragment textFragment;
+    IdFragment idFragment;
+    AccountFragment accountFragment;
+
+    final int TAB_COUNT = 3;
+
+    List<Memo> memoDatas = new ArrayList();
     List<Id> idDatas = new ArrayList();
-    IdDetailFragment idDetailFragment;
+    List<Account> accountDatas = new ArrayList();
+
+    private int page_position = 0; // 프래그먼트 이동시 스택 저장하는거 만들때 쓰는것. 필요없다면 나중엔 지우자
+
+    ViewPager viewPager;
+    TabLayout tabLayout;
+    Intent intent;
+
+    private FloatingActionButton fabText;
+    private FloatingActionButton fabId;
+    private FloatingActionButton fabAcc;
+    private FloatingActionMenu  fabMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBtnMemo = (Button) findViewById(R.id.btnText);
-        mBtnId = (Button) findViewById(R.id.btnId);
-        mBtnAccount = (Button) findViewById(R.id.btnAccount);
-        mBtnNew = (Button) findViewById(R.id.btnAddMemo);
+        widgetSetting();
 
-        layoutMain = (FrameLayout) findViewById(R.id.frameLayout);
-        main = MainFragment.newInstance(1);
-        idF = new IdFragment();
-        account = AccountFragment.newInstance(1);
-        textDetail = new TextDetailFragment();
-        idDetailFragment = new IdDetailFragment();
+        textDataSetting();
+        idDataSetting();
+        accountDataSetting();
 
+        viewPagerSetting();
+    }
 
-        try {
-            loadTextData();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private void widgetSetting() {
+        textFragment = new TextFragment();
+        idFragment = new IdFragment();
+        accountFragment = new AccountFragment();
+
+        fabText = (FloatingActionButton) findViewById(R.id.fabText);
+        fabId = (FloatingActionButton) findViewById(R.id.fabId);
+        fabAcc = (FloatingActionButton) findViewById(R.id.fabAcc);
+        fabMenu = (FloatingActionMenu) findViewById(R.id.fabMenu);
+
+        tabLayout = (TabLayout) findViewById(R.id.tab);
+        tabLayout.addTab( tabLayout.newTab().setText("텍스트"));
+        tabLayout.addTab( tabLayout.newTab().setText("아이디"));
+        tabLayout.addTab( tabLayout.newTab().setText("계좌"));
+
+        fabId.setOnClickListener(clickListener);
+        fabText.setOnClickListener(clickListener);
+        fabAcc.setOnClickListener(clickListener);
+    }
+
+    public void textDataSetting() {
+        memoDatas = DataLoader.getMemoDatas(this);
+        textFragment.setData(memoDatas);
+    }
+
+    private void idDataSetting() {
+        idDatas = DataLoader.getIdDatas(this);
+        idFragment.setData(idDatas);
+    }
+
+    private void accountDataSetting() {
+        accountDatas = DataLoader.getAccountDatas(this);
+        accountFragment.setData(accountDatas);
+    }
+
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.fabText:
+                    goTextDetail();
+                    break;
+                case R.id.fabId:
+                    goIdDetail();
+                    break;
+                case R.id.fabAcc:
+                    goAccountDetail();
+                    break;
+            }
         }
-        main.setData(datas);
+    };
 
-        manager = getSupportFragmentManager();
-        setMainFragment();
+    private void viewPagerSetting() {
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+
+        //아래 두줄이 fragment이동과 뷰페이져를 맞추어준다.
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
-
-    public void loadTextData () throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        memoDao = dbHelper.getMemoDao();
-
-        datas = memoDao.queryForAll();
+    public void RefreshTextAdapter() {
+        memoDatas = DataLoader.getMemoDatas(this);
+        textFragment.setData(memoDatas);
+        textFragment.refreshAdapter();
     }
 
-
-    public void setMainFragment () {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.activity_main, main);
-        transaction.commit();
+    public void RefreshIdAdapter() {
+        idDatas = DataLoader.getIdDatas(this);
+        idFragment.setData(idDatas);
+        idFragment.refreshIdAdapter();
     }
 
-    @Override
-    public void goMainFragment () {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.activity_main, main);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void RefreshAccountAdapter() {
+        accountDatas = DataLoader.getAccountDatas(this);
+        accountFragment.setData(accountDatas);
+        accountFragment.refreshAccountAdapter();
     }
 
-    private void textDetailRefresh (){
-        textDetail = null;
-        textDetail = new TextDetailFragment();
-    }
+    class PagerAdapter extends FragmentStatePagerAdapter {
 
-    @Override
-    public void goDetail() {
-        FragmentTransaction transaction = manager.beginTransaction();
+        public PagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-        textDetailRefresh();
-        transaction.remove(main);
-        transaction.add(R.id.activity_main, textDetail);
-        transaction.addToBackStack(null);
-        textDetail.setPosition(-1);
-        transaction.commit();
-    }
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            switch (position) {
+                case 0: fragment = textFragment; break;
+                case 1: fragment = idFragment; break;
+                case 2: fragment = accountFragment; break;
+            }
+            return fragment;
+        }
 
-    // 아이템 클릭시 디테일로 넘어가기기
-    @Override
-    public void goDetail(int position) {
-        textDetailRefresh();
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.remove(main);
-        transaction.add(R.id.activity_main, textDetail);
-        transaction.addToBackStack(null);
-        textDetail.setPosition(position);
-        textDetail.setData(datas);
-        transaction.commit();
-    }
-
-    @Override
-    public void backToText() {
-        // super.onBackPressed();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.remove(textDetail);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    @Override
-    public void fromIdToText() {
-        // super.onBackPressed();
-        Log.e("Mainactivity", " text로가자 :::::::::::::::::::::::");
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.remove(idF);
-        transaction.add(R.id.activity_main, main);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        @Override
+        public int getCount() {
+            return TAB_COUNT;
+        }
 
     }
 
     @Override
-    public void fromAddTextToId() {
-        Log.e("Mainactivity", " text로가자 :::::::::::::::::::::::");
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.remove(textDetail);
-        transaction.add(R.id.activity_main, idF);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void goTextDetail() {
+        intent = new Intent(this, TextDetailActivity.class);
+        intent.putExtra("position", -1);
+        fabMenu.close(true);
+
+        startActivityForResult(intent,REQ_ADD_MEMO);
     }
 
     @Override
-    public void saveToList(Memo memo) throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+    public void goTextDetail(int position) {
+        intent = new Intent(this, TextDetailActivity.class);
+        intent.putExtra("position", position);
 
-        memoDao = dbHelper.getMemoDao();
-
-        memoDao.create(memo);
-
-        loadTextData();
-        main.setData(datas);
-        super.onBackPressed();
-        main.refreshAdapter();
+        startActivityForResult(intent,REQ_MEDIFY_MEMO);
     }
-
-    @Override
-    public void saveToTextModify(Memo memo) throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        memoDao = dbHelper.getMemoDao();
-
-        memoDao.update(memo);
-
-        loadTextData();
-        main.setData(datas);
-        super.onBackPressed();
-        main.refreshAdapter();
-    }
-
-    @Override
-    public void textDelete(int position) throws SQLException {
-        Log.e("Mainactivity", " 삭제할 position은 ::::::::::: " + position + " :::::::::::: 입니다.");
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        memoDao = dbHelper.getMemoDao();
-        Memo memo = datas.get(position);
-        memoDao.delete(memo);
-
-        loadTextData();
-        main.setData(datas);
-        main.refreshAdapter();
-    }
-
-    @Override
-    public void idDelete(int position) throws SQLException {
-        Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        idDao = dbHelper.getIdDao();
-        Id id = idDatas.get(position);
-        idDao.delete(id);
-
-        loadIDData();
-        idF.setData(idDatas);
-        idF.refreshIdAdapter();
-    }
-
-    @Override
-    public void goID() throws SQLException {
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        loadIDData();
-        idF.setData(idDatas);
-
-        textDetailRefresh();
-        transaction.replace(R.id.activity_main, idF);
-        transaction.addToBackStack(null);
-        idF.setPosition(-1);
-        transaction.commit();
-    }
-
-    public void loadIDData () throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        idDao = dbHelper.getIdDao();
-
-        idDatas = idDao.queryForAll();
-    }
-
 
     @Override
     public void goIdDetail() {
+        intent = new Intent(this, IdDetailActivity.class);
+        intent.putExtra("position", -1);
+        fabMenu.close(true);
 
-        FragmentTransaction transaction = manager.beginTransaction();
-        idDetailRefresh();
-
-        transaction.replace(R.id.activity_main, idDetailFragment);
-        transaction.addToBackStack(null);
-        idDetailFragment.setPosition(-1);
-        transaction.commit();
-
-    }
-
-    private void idDetailRefresh (){
-        idDetailFragment = null;
-        idDetailFragment = new IdDetailFragment();
+        startActivityForResult(intent,REQ_ADD_ID);
     }
 
     @Override
     public void goIdDetail(int position) {
-        idF.refreshIdAdapter();
-        Log.e("IdFragment", " 저장을하자 :::::::::::::::::::::::");
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.activity_main, idDetailFragment);
-        transaction.addToBackStack(null);
-        idDetailFragment.setPosition(position);
-        idDetailFragment.setData(idDatas);
-        transaction.commit();
+        intent = new Intent(this, IdDetailActivity.class);
+        intent.putExtra("position", position);
+
+        startActivityForResult(intent,REQ_MEDIFY_ID);
     }
 
     @Override
-    public void saveToId(Id id) throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
+    public void goAccountDetail() {
+        intent = new Intent(this, AccountDetailActivity.class);
+        intent.putExtra("position", -1);
+        fabMenu.close(true);
 
-        idDao = dbHelper.getIdDao();
-
-        idDao.create(id);
-
-
-        super.onBackPressed();
-        loadIDData();
-        idF.setData(idDatas);
-        idF.refreshIdAdapter();
+        startActivityForResult(intent,REQ_ADD_ACCOUNT);
     }
 
+    @Override
+    public void goAccountDetail(int position) {
+        intent = new Intent(this, AccountDetailActivity.class);
+        intent.putExtra("position", position);
+
+        startActivityForResult(intent,REQ_MEDIFY_ACCOUNT);
+    }
 
     @Override
-    public void saveToIdModify(Id id) throws SQLException {
-        dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-
-        idDao = dbHelper.getIdDao();
-
-        idDao.update(id);
-
-        super.onBackPressed();
-
-        // 셋데이터를 하고 refresh를 해야 세팅이 된다.
-        loadIDData();
-        idF.setData(idDatas);
-        idF.refreshIdAdapter();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQ_ADD_MEMO:
+                textDataSetting();
+                textFragment.refreshAdapter();
+                break;
+            case REQ_MEDIFY_MEMO:
+                textDataSetting();
+                textFragment.refreshAdapter();
+                break;
+            case REQ_ADD_ID:
+                idDataSetting();
+                idFragment.refreshIdAdapter();
+                break;
+            case REQ_MEDIFY_ID:
+                idDataSetting();
+                idFragment.refreshIdAdapter();
+                break;
+            case REQ_ADD_ACCOUNT:
+                accountDataSetting();
+                accountFragment.refreshAccountAdapter();
+                break;
+            case REQ_MEDIFY_ACCOUNT:
+                accountDataSetting();
+                accountFragment.refreshAccountAdapter();
+                break;
+        }
     }
 }

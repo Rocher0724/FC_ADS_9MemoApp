@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relativeLO"
-    tools:context="choongyul.android.com.memoappp.MainFragment"
+    tools:context="choongyul.android.com.memoappp.TextFragment"
     android:background="#aba8bc"
     >
 

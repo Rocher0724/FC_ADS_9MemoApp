@@ -1,12 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativeLO"
-    tools:context="choongyul.android.com.memoappp.TextFragment"
-    android:background="#6c6b75"
-    >
+    android:id="@+id/activity_id_detail"
+    tools:context="choongyul.android.com.memoappp.IdDetailActivity"
+    android:background="#6c6b75">
+
 
 
     <RelativeLayout
@@ -14,10 +14,10 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:id="@+id/relati"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="#aba8bc">
 
 
@@ -31,17 +31,18 @@
             android:layout_below="@+id/textBANK"
             android:layout_alignLeft="@+id/textBANK"
             android:layout_alignStart="@+id/textBANK"
-            android:hint="   insert ID"
+            android:hint="    ID"
             android:background="@drawable/rounded_edittext"
-            android:paddingTop="10dp"
-            android:layout_marginRight="40dp" />
+            android:layout_marginRight="20dp"
+            android:padding="15dp"
+            />
 
 
         <TextView
-            android:text="Your ID"
+            android:text="아이디"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="57dp"
+            android:layout_marginTop="20dp"
             android:id="@+id/textBANK"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_below="@+id/etNick"
@@ -55,7 +56,7 @@
             android:layout_below="@+id/textBANK"
             android:layout_alignLeft="@+id/etNick"
             android:layout_alignStart="@+id/etNick"
-            android:layout_marginTop="83dp"
+            android:layout_marginTop="60dp"
             android:id="@+id/textAccount"
             android:layout_marginBottom="5dp" />
 
@@ -66,29 +67,31 @@
             android:ems="10"
             android:id="@+id/etNick"
             android:gravity="top"
-            android:hint="   insert adress"
+            android:hint="    주소"
             android:layout_below="@+id/textView"
             android:layout_alignLeft="@+id/textView"
             android:layout_alignStart="@+id/textView"
             android:background="@drawable/rounded_edittext"
-            android:paddingTop="10dp"
-            android:layout_marginRight="40dp" />
+            android:layout_marginRight="20dp"
+            android:padding="15dp"
+            />
+
 
         <TextView
-            android:text="Site Adress"
+            android:text="사이트 주소 , 이름"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="41dp"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:id="@+id/textView"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
-            android:text="ID Manager"
+            android:text="ID 관리"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView7"
@@ -98,60 +101,32 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:inputType="textPersonName"
+            android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/etMemo"
             android:gravity="top"
-            android:hint=" Don't insert your password"
+            android:hint="   메모"
             android:background="@drawable/rounded_edittext"
             android:layout_height="match_parent"
             android:layout_below="@+id/textAccount"
             android:layout_alignLeft="@+id/textAccount"
             android:layout_alignStart="@+id/textAccount"
-            android:paddingTop="10dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="40dp" />
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:padding="15dp"/>
     </RelativeLayout>
 
-    <Button
-        android:text="text"
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabAddId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnText"
-        android:layout_alignParentBottom="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btnAccount" />
-
-    <Button
-        android:text="save"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSave"
+        android:src="@drawable/ic50"
+        style="@style/MenuButtonsSmall.Blue"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_width="88dp" />
-
-    <Button
-        android:text="account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnAccount"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/btnSave"
-        android:layout_toStartOf="@+id/btnSave"
-        android:layout_marginRight="3dp" />
-
-    <Button
-        android:text="ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnId"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnText"
-        android:layout_toEndOf="@+id/btnText"
-        android:layout_marginLeft="3dp" />
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="36dp" />
 
 
 </RelativeLayout>

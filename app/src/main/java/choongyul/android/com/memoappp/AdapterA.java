@@ -2,77 +2,91 @@ package choongyul.android.com.memoappp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.sql.SQLException;
 import java.util.List;
+
+import choongyul.android.com.memoappp.domain.Account;
 import choongyul.android.com.memoappp.domain.Id;
+import choongyul.android.com.memoappp.interfaces.AccountDetailInterface;
 import choongyul.android.com.memoappp.interfaces.IdDetailInterface;
+
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * Created by myPC on 2017-02-14.
  */
-public class AdapterI extends RecyclerView.Adapter<AdapterI.ViewHolder> implements DialogInterface.OnClickListener{
+public class AdapterA extends RecyclerView.Adapter<AdapterA.ViewHolder> implements DialogInterface.OnClickListener{
 
     private Context context;
-    List<Id> iddatas;
-    IdDetailInterface idDetailInterface;
+    List<Account> accountDatas;
+    AccountDetailInterface accountDetailInterface;
     int positionTemp;
     MainActivity mainActivity;
 
-    public AdapterI(Context context, List<Id> iddatas) {
+    public AdapterA(Context context, List<Account> accountDatas) {
         this.context = context;
-        this.iddatas = iddatas;
-        idDetailInterface = (IdDetailInterface) context;
+        this.accountDatas = accountDatas;
+        accountDetailInterface = (AccountDetailInterface) context;
         mainActivity = (MainActivity) context;
     }
 
     @Override
-    public AdapterI.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterA.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_id_item, parent, false);
+                .inflate(R.layout.layout_account_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AdapterI.ViewHolder holder, int position) {
-        Id id = iddatas.get(position);
+    public void onBindViewHolder(AdapterA.ViewHolder holder, int position) {
+        Account account = accountDatas.get(position);
         holder.position = position;
-        holder.textSiteAdress.setText(id.getSiteAdress());
-        holder.textId.setText(id.getSiteId());
+        holder.textNickname.setText(account.getAccountNickname());
+        holder.textBankName.setText(account.getBankName());
+        holder.textAccountNumber.setText(account.getAccountNumber());
+        holder.textOwnerName.setText(account.getOwnerName());
     }
 
     @Override
     public int getItemCount() {
-        return iddatas.size();
+        return accountDatas.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textSiteAdress;
-        TextView textId;
-        LinearLayout linearLayout;
+        TextView textNickname;
+        TextView textBankName;
+        TextView textAccountNumber;
+        TextView textOwnerName;
+        RelativeLayout relativeLayout;
         int position;
 
         public ViewHolder(View v) {
             super(v);
-            textSiteAdress = (TextView) v.findViewById(R.id.textNickname);
-            textId = (TextView) v.findViewById(R.id.textBankName);
-            linearLayout = (LinearLayout) v.findViewById(R.id.linearID);
+            textNickname = (TextView) v.findViewById(R.id.textNickname);
+            textBankName = (TextView) v.findViewById(R.id.textBankName);
+            textAccountNumber = (TextView) v.findViewById(R.id.textAccountNumber);
+            textOwnerName = (TextView) v.findViewById(R.id.textOwnerName);
+            relativeLayout = (RelativeLayout) v.findViewById(R.id.relatiACC);
 
-            linearLayout.setOnClickListener(new View.OnClickListener() {
+            relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    idDetailInterface.goIdDetail(position);
+                    accountDetailInterface.goAccountDetail(position);
                 }
             });
-            linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            relativeLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     DialogSimple(position);
@@ -101,8 +115,8 @@ public class AdapterI extends RecyclerView.Adapter<AdapterI.ViewHolder> implemen
         switch (id) {
             case BUTTON_POSITIVE:
                 try {
-                    DataLoader.idDelete(positionTemp, context);
-                    mainActivity.RefreshIdAdapter();
+                    DataLoader.accountDelete(positionTemp, context);
+                    mainActivity.RefreshAccountAdapter();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

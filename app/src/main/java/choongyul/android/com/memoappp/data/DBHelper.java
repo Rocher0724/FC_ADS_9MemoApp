@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
+import choongyul.android.com.memoappp.domain.Account;
 import choongyul.android.com.memoappp.domain.Id;
 import choongyul.android.com.memoappp.domain.Memo;
 
@@ -20,7 +21,7 @@ import choongyul.android.com.memoappp.domain.Memo;
 public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DB_NAME = "database.db";
-    public static final int DB_VERSION = 2;
+    public static final int DB_VERSION = 4;
 
     public DBHelper(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -34,9 +35,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try{
-            // memo.class 파일에 정의된 테이블을 생성한다.
+            // 테이블을 생성한다. 테이블이 추가되면 아래 createTable이 추가되야한다.
             TableUtils.createTable(connectionSource, Memo.class);
             TableUtils.createTable(connectionSource, Id.class);
+            TableUtils.createTable(connectionSource, Account.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -52,7 +54,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try{
-            TableUtils.createTable(connectionSource, Id.class);
+            TableUtils.createTable(connectionSource, Account.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +62,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<Memo, Integer> memoDao = null;
     // Dao 객체를 통해서
-    // Long은 키값이고 Bbs는 자료이다.
+    // Integer는 키값이고 Bbs는 자료이다.
     public Dao<Memo, Integer> getMemoDao() throws SQLException {
         if(memoDao != null) {
             return memoDao;
@@ -78,12 +80,25 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<Id, Integer> idDao = null;
     // Dao 객체를 통해서
-    // Long은 키값이고 Bbs는 자료이다.
+    // Integer는 키값이고 Bbs는 자료이다.
+
     public Dao<Id, Integer> getIdDao() throws SQLException {
         if(idDao != null) {
             return idDao;
         }
         idDao = getDao(Id.class);
         return idDao;
+    }
+
+    private Dao<Account, Integer> accountDao = null;
+    // Dao 객체를 통해서
+    // Integer는 키값이고 Bbs는 자료이다.
+
+    public Dao<Account, Integer> getAccountDao() throws SQLException {
+        if(accountDao != null) {
+            return accountDao;
+        }
+        accountDao = getDao(Account.class);
+        return accountDao;
     }
 }

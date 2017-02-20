@@ -5,19 +5,14 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.sql.SQLException;
 import java.util.List;
-
 import choongyul.android.com.memoappp.domain.Memo;
-import choongyul.android.com.memoappp.interfaces.DeleteInterface;
 import choongyul.android.com.memoappp.interfaces.TextInterface;
-
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
@@ -29,16 +24,14 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     private Context context;
     List<Memo> datas;
     TextInterface textInterface;
-    DeleteInterface mainInter;
     int positionTemp;
-
-
+    MainActivity mainActivity;
 
     public AdapterT(Context context, List<Memo> datas) {
         this.context = context;
         this.datas = datas;
         textInterface = (TextInterface) context;
-        this.mainInter = (DeleteInterface) context;
+        mainActivity = (MainActivity) context;
     }
 
     @Override
@@ -52,7 +45,6 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     public void onBindViewHolder(AdapterT.ViewHolder holder, int position) {
         Memo memo = datas.get(position);
         holder.position = position;
-        Log.d("AdapterT", "");
         holder.textView.setText(memo.getMemo());
     }
 
@@ -60,8 +52,6 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     public int getItemCount() {
         return datas.size();
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
@@ -75,16 +65,13 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    textInterface.goDetail(position);
+                    textInterface.goTextDetail(position);
                 }
             });
             textView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //TODO 롱클릭리스너
-                    // 롱클릭시 다이얼로그가 떠야하고 다이얼로그 후에 예 이면 아래 실행
                     DialogSimple(position);
-//                    mainInter.textDelete(position);
                     return false;
                 }
             });
@@ -100,9 +87,7 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
         positionTemp = position;
 
         AlertDialog alert = alt_bld.create();
-        // Title for AlertDialog
         alert.setTitle("알림");
-        // Icon for AlertDialog
         alert.setIcon(R.mipmap.ic_icon);
         alert.show();
     }
@@ -111,16 +96,18 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     public void onClick(DialogInterface dialog, int id) {
         switch (id) {
             case BUTTON_POSITIVE:
-                // Action for 'Yes' Button
                 try {
-                    mainInter.textDelete(positionTemp);
+                    DataLoader.textDelete(positionTemp, context);
+                    mainActivity.RefreshTextAdapter();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
                 break;
             case BUTTON_NEGATIVE:
-                // Action for 'NO' Button
+                dialog.cancel();
+                break;
+            default:
                 dialog.cancel();
                 break;
         }

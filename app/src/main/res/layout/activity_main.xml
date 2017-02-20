@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -9,11 +9,68 @@
     tools:context="choongyul.android.com.memoappp.MainActivity">
     <!--android:background="#afafaf">-->
 
-    <FrameLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="android.support.v4.app.ListFragment"
-        android:id="@+id/frameLayout" />
+        android:id="@+id/textRelativeLo">
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewPager"
+            android:layout_above="@+id/tab"/>
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fabMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:menu_labels_style="@style/MenuButtonsSmall.Blue"
+            fab:menu_labels_showAnimation="@anim/jump_from_down"
+            fab:menu_labels_hideAnimation="@anim/jump_to_down"
+            fab:menu_animationDelayPerItem="0"
+            fab:menu_shadowColor="#444"
+            fab:menu_colorNormal="#35cdd5"
+            fab:menu_colorPressed="#2fb8c0"
+            fab:menu_colorRipple="#259197"
+            android:layout_above="@+id/tab"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabAcc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_aa"
+                fab:fab_label="계좌 메모"
+                style="@style/MenuButtonsSmall.Blue" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_aa"
+                fab:fab_label="아이디 메모"
+                style="@style/MenuButtonsSmall.Blue" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_aa"
+                fab:fab_label="메모 추가"
+                style="@style/MenuButtonsSmall.Blue" />
+    <!--35cdd5-->
+        </com.github.clans.fab.FloatingActionMenu>
+    </RelativeLayout>
 
 
-</RelativeLayout>
+</FrameLayout>
