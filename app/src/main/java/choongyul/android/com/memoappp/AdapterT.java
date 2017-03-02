@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.sql.SQLException;
 import java.util.List;
 import choongyul.android.com.memoappp.domain.Memo;
@@ -26,6 +29,7 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     TextInterface textInterface;
     int positionTemp;
     MainActivity mainActivity;
+    SimpleDateFormat sdf;
 
     public AdapterT(Context context, List<Memo> datas) {
         this.context = context;
@@ -46,6 +50,9 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
         Memo memo = datas.get(position);
         holder.position = position;
         holder.textView.setText(memo.getMemo());
+        Date date = memo.getDate();
+        sdf = new SimpleDateFormat("yy년 MM월 dd일");
+        holder.textDate.setText(sdf.format(date).toString());
     }
 
     @Override
@@ -54,13 +61,14 @@ public class AdapterT extends RecyclerView.Adapter<AdapterT.ViewHolder> implemen
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        TextView textView, textDate;
         CardView cardView;
         int position;
 
         public ViewHolder(View v) {
             super(v);
             textView = (TextView) v.findViewById(R.id.textItem);
+            textDate = (TextView) v.findViewById(R.id.textDate);
             cardView = (CardView) v.findViewById(R.id.textCard);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override

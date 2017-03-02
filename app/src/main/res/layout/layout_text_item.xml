@@ -12,18 +12,35 @@
         android:layout_width="match_parent"
         android:id="@+id/textCard"
         app:cardCornerRadius="10dp"
-        android:layout_height="75dp"
-        android:background="#cfe1fe">
+        android:background="#cfe1fe"
+        android:layout_height="85dp">
 
-        <TextView
-            android:text="TextView"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/textItem"
-            android:gravity="center_vertical"
-            android:padding="3dp"
-            android:layout_margin="5dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            />
+            android:id="@+id/lolo">
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textDate"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="3dp"
+                android:paddingLeft="3dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textItem"
+                android:gravity="center_vertical"
+                android:padding="3dp"
+                android:layout_margin="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                />
+        </LinearLayout>
+
     </android.support.v7.widget.CardView>
 </LinearLayout>
