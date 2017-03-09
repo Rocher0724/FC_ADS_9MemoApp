@@ -252,4 +252,9 @@ public class MainActivity
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }
